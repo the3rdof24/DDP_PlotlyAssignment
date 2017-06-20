@@ -1,0 +1,46 @@
+---
+title: "Plotly Presentation Assignment"
+author: "Nicolaas Kuit"
+date: "June 19, 2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(plotly)
+```
+
+## Plotly Presentation Assignment
+The next slide will show a plot of price rankings of various TSX stocks compared to a large basket of stocks.  
+We'll look at the rank of the following stocks:   
+
+* VNP.TO  
+* DC-A.TO  
+* SMF.TO  
+* LUC.TO  
+* PG.TO  
+
+## Stock Rankings over 6 days
+```{r, echo=FALSE}
+prices <- read.table("priceData", header = TRUE, stringsAsFactors = FALSE)
+numStocks <- length(unique(prices$YahooSymbol))
+
+plot_ly(data = filter(prices, YahooSymbol %in% c("VNP.TO", "DC-A.TO", "SMF.TO", "LUC.TO", "PG.TO")), 
+             x = ~PriceDate, 
+             y = ~(CloseRank * 100), 
+             color=~YahooSymbol, 
+             type="scatter", 
+             mode="lines+markers", 
+             hoverinfo="text", 
+             text=~paste(round(CloseRank * 100, 2), "%: ", YahooSymbol, sep="")
+             ) %>% 
+    layout(title = paste("Stock price rankings relative to a basket of", numStocks, "stocks"),
+           xaxis = list(title = "Date"),
+           yaxis = list(title = "Price ranking in % terms"),
+           hovermode='compare')
+```
+
+## What does the graph show us?
+Over a six day period:  
+- VNP.TO **increased** its price ranking the most.  
+- PG.TO and LUC.TO **decreased** its price ranking the most.
